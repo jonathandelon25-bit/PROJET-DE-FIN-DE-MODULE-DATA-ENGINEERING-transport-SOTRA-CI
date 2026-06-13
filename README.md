@@ -8,19 +8,20 @@ Ce projet met en place un pipeline de données complet (ETL) pour analyser la fr
 
 ```mermaid
 flowchart LR
-    A\[CSV : voyages\_sotra\_70k.csv] --> B\[Extraction\\npandas.read\_csv]
-    B --> C\[Transformation\\nnettoyage + enrichissement\\n+ détection d'anomalies]
-    C --> D\[Chargement\\nSupabase PostgreSQL]
-    D --> E\[Schéma en étoile\\ndim\_\* + faits\_voyages]
-    E --> F\[Analyses SQL]
-    F --> G\[Tableau de bord\\nMatplotlib PNG]
-    C --> H\[Export Parquet\\ndata lake]
+    A[CSV : voyages_sotra_70k.csv] --> B[Extraction pandas.read_csv]
+    B --> C[Transformation : nettoyage + enrichissement + detection anomalies]
+    C --> D[Chargement Supabase PostgreSQL]
+    D --> E[Schema en etoile : dims + faits_voyages]
+    E --> F[Analyses SQL]
+    F --> G[Tableau de bord Matplotlib PNG]
+    C --> H[Export Parquet data lake]
 
     subgraph Orchestration
-        I\[Airflow DAG\\nquotidien : extract -> transform -> load -> rapport]
+        I[Airflow DAG quotidien]
     end
     I -.-> B
 ```
+
 
 ## 3\. Technologies utilisées
 
