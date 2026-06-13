@@ -1,0 +1,51 @@
+# ============================================================
+# DOCKER-COMPOSE — Projet 5 : Transport SOTRA
+# Services : etl (notebook Jupyter) + airflow (DAG quotidien)
+# ============================================================
+
+version: "3.8"
+
+services:
+
+  # ── Service 1 : Environnement ETL (notebook Jupyter) ────────
+  etl:
+    build: .
+    container_name: sotra_etl
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+  # ── Service 2 : Base de métadonnées Airflow ─────────────────
+  postgres_airflow:
+    image: postgres:15
+    container_name: sotra_airflow_db
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_db_data:/var/lib/postgresql/data
+
+  # ── Service 3 : Airflow (scheduler + webserver en mode standalone) ──
+  airflow:
+    image: apache/airflow:2.9.1
+    container_name: sotra_airflow
+    depends_on:
+      - postgres_airflow
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres_airflow:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    env_file:
+      - .env
+    volumes:
+      - ./dags:/opt/airflow/dags
+    ports:
+      - "8080:8080"
+    command: standalone
+
+volumes:
+  airflow_db_data:

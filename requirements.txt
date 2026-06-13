@@ -1,0 +1,12 @@
+# Pipeline ETL (notebook + scripts)
+pandas==2.2.2
+numpy==1.26.4
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+pyarrow==16.1.0
+matplotlib==3.8.4
+jupyter==1.0.0
+
+# NB : Apache Airflow n'est pas installé ici car il a ses propres
+# contraintes de dépendances. Il tourne via l'image officielle
+# "apache/airflow" dans docker-compose.yml (voir dossier dags/).
